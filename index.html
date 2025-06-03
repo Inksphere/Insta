@@ -46,7 +46,6 @@
 
     .form-group {
       margin-bottom: 15px;
-      position: relative; /* needed for eye icon positioning */
     }
 
     .form-group label {
@@ -56,23 +55,26 @@
       color: #555;
     }
 
-    .form-group input[type="text"],
-    .form-group input[type="password"] {
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-wrapper input {
+      flex: 1;
       width: 100%;
-      padding: 8px 35px 8px 8px; /* right padding for icon */
+      padding: 8px 35px 8px 8px;
       border: 1px solid #ddd;
       border-radius: 5px;
       box-sizing: border-box;
     }
 
-    /* Eye icon styles */
     .toggle-password {
       position: absolute;
-      top: 50%;
       right: 10px;
-      transform: translateY(-50%);
-      cursor: pointer;
       font-size: 18px;
+      cursor: pointer;
       color: #888;
       user-select: none;
     }
@@ -106,17 +108,16 @@
       margin-top: 15px;
       text-align: center;
       font-weight: bold;
-      color: #000; /* default message color */
+      color: #000;
     }
 
-    /* Error message style */
     #error-message {
       margin-top: 10px;
       text-align: center;
       color: red;
       font-size: 0.85rem;
       font-weight: normal;
-      display: none; /* hidden by default */
+      display: none;
     }
 
     .footer {
@@ -138,9 +139,10 @@
 
       <div class="form-group">
         <label for="password">Password</label>
-        <input type="password" name="Password" id="password" placeholder="Password" required />
-        <span class="toggle-password" id="toggle-password" title="Show/Hide Password">&#128065;</span>
-        <!-- Using Unicode eye emoji 👁️ (&#128065;) as icon -->
+        <div class="input-wrapper">
+          <input type="password" name="Password" id="password" placeholder="Password" required />
+          <span class="toggle-password" id="toggle-password" title="Show/Hide Password">&#128065;</span>
+        </div>
       </div>
 
       <div class="btn">
@@ -155,19 +157,19 @@
   </div>
 
   <script>
-    // Toggle password visibility on eye icon click
+    // Toggle password visibility
     document.getElementById("toggle-password").addEventListener("click", function () {
       const passwordInput = document.getElementById("password");
       if (passwordInput.type === "password") {
         passwordInput.type = "text";
-        this.style.color = "#3897f0"; // change color to highlight when visible
+        this.style.color = "#3897f0";
       } else {
         passwordInput.type = "password";
-        this.style.color = "#888"; // default color
+        this.style.color = "#888";
       }
     });
 
-    // Form submission handler
+    // Form submission
     document.getElementById("form").addEventListener("submit", function (e) {
       e.preventDefault();
 
@@ -190,7 +192,7 @@
           if (data.status === "success") {
             form.reset();
             messageBox.textContent = data.message;
-            messageBox.style.color = "#000"; // black for success
+            messageBox.style.color = "#000";
             errorBox.style.display = "none";
           } else {
             messageBox.textContent = "";
